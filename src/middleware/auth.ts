@@ -1,23 +1,23 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
-import { env } from "../config/env.js";
+import { fromNodeHeaders } from "better-auth/node";
+import { auth } from "../auth.js";
 import { HttpError } from "../lib/errors.js";
+import { User } from "../models/index.js";
 
 export type AuthenticatedRequest = Request & { userId: string };
 
-export function issueToken(userId: string) {
-  return jwt.sign({ sub: userId }, env.jwtSecret, { expiresIn: "7d" });
-}
-
-export function requireAuth(request: Request, _response: Response, next: NextFunction) {
-  const token = request.header("authorization")?.replace(/^Bearer\s+/i, "");
-  if (!token) return next(new HttpError(401, "Sign in to continue."));
+export async function requireAuth(request: Request, _response: Response, next: NextFunction) {
   try {
-    const payload = jwt.verify(token, env.jwtSecret);
-    if (typeof payload === "string" || !payload.sub) throw new Error("Missing subject");
-    (request as AuthenticatedRequest).userId = payload.sub;
+    const session = await auth.api.getSession({ headers: fromNodeHeaders(request.headers) });
+    if (!session?.user) throw new HttpError(401, "Sign in with Google to continue.");
+    const member = await User.findOneAndUpdate(
+      { authUserId: session.user.id },
+      { $setOnInsert: { authUserId: session.user.id, name: session.user.name || "SkillSwap member", email: session.user.email, avatarUrl: session.user.image || undefined } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+    (request as AuthenticatedRequest).userId = member._id.toString();
     return next();
-  } catch {
-    return next(new HttpError(401, "Your session has expired. Please sign in again."));
+  } catch (error) {
+    return next(error instanceof HttpError ? error : new HttpError(401, "Your Google session has expired. Please sign in again."));
   }
 }

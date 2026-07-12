@@ -6,9 +6,9 @@ type WantedSkill = { skillName: string; category: SkillCategory };
 type Availability = { day: string; timeSlots: string[] };
 
 export type IUser = {
+  authUserId: string;
   name: string;
   email: string;
-  passwordHash: string;
   avatarUrl?: string;
   bio?: string;
   location?: string;
@@ -93,9 +93,9 @@ const availabilitySchema = new Schema<Availability>({
 }, { _id: false });
 
 const userSchema = new Schema<IUser>({
+  authUserId: { type: String, required: true, unique: true, index: true },
   name: { type: String, required: true, trim: true, minlength: 2, maxlength: 80 },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true, maxlength: 320 },
-  passwordHash: { type: String, required: true, select: false },
   avatarUrl: { type: String, trim: true, maxlength: 2048 },
   bio: { type: String, trim: true, maxlength: 600 },
   location: { type: String, trim: true, maxlength: 120 },
