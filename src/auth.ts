@@ -11,10 +11,13 @@ function required(name: string, value: string | undefined) {
 export const authMongoClient = new MongoClient(env.mongoUri);
 
 export const auth = betterAuth({
-  database: mongodbAdapter(authMongoClient.db(), { client: authMongoClient }),
+  database: mongodbAdapter(authMongoClient.db("skillswap"), { client: authMongoClient }),
   baseURL: env.betterAuthUrl,
   secret: required("BETTER_AUTH_SECRET", env.betterAuthSecret),
   trustedOrigins: env.clientOrigins,
+  emailAndPassword: {
+    enabled: true,
+  },
   socialProviders: {
     google: {
       clientId: required("GOOGLE_CLIENT_ID", env.googleClientId),

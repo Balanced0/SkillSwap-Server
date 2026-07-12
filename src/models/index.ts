@@ -1,4 +1,4 @@
-import { model, models, Schema, type HydratedDocument, type Types } from "mongoose";
+import mongoose, { Schema, type HydratedDocument, type Types } from "mongoose";
 import { SESSION_STATUSES, SKILL_CATEGORIES, SKILL_LEVELS, type SessionStatus, type SkillCategory, type SkillLevel } from "../constants.js";
 
 type OfferedSkill = { skillName: string; category: SkillCategory; level: SkillLevel };
@@ -150,8 +150,8 @@ const reviewSchema = new Schema<IReview>({
 }, { timestamps: true });
 reviewSchema.index({ sessionId: 1, reviewerId: 1 }, { unique: true });
 
-export const User = models.User || model<IUser>("User", userSchema);
-export const Listing = models.Listing || model<IListing>("Listing", listingSchema);
-export const Session = models.Session || model<ISession>("Session", sessionSchema);
-export const Transaction = models.Transaction || model<ITransaction>("Transaction", transactionSchema);
-export const Review = models.Review || model<IReview>("Review", reviewSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+export const Listing = mongoose.models.Listing || mongoose.model<IListing>("Listing", listingSchema);
+export const Session = mongoose.models.Session || mongoose.model<ISession>("Session", sessionSchema);
+export const Transaction = mongoose.models.Transaction || mongoose.model<ITransaction>("Transaction", transactionSchema);
+export const Review = mongoose.models.Review || mongoose.model<IReview>("Review", reviewSchema);
