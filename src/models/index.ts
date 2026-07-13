@@ -150,8 +150,29 @@ const reviewSchema = new Schema<IReview>({
 }, { timestamps: true });
 reviewSchema.index({ sessionId: 1, reviewerId: 1 }, { unique: true });
 
+export type IWant = {
+  userId: Types.ObjectId;
+  skillName: string;
+  category: SkillCategory;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type WantDocument = HydratedDocument<IWant>;
+
+const wantSchema = new Schema<IWant>({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  skillName: { type: String, required: true, trim: true, minlength: 3, maxlength: 90 },
+  category: { type: String, required: true, enum: SKILL_CATEGORIES, index: true },
+  description: { type: String, required: true, trim: true, minlength: 20, maxlength: 3000 },
+}, { timestamps: true });
+wantSchema.index({ skillName: "text", description: "text" });
+
 export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 export const Listing = mongoose.models.Listing || mongoose.model<IListing>("Listing", listingSchema);
 export const Session = mongoose.models.Session || mongoose.model<ISession>("Session", sessionSchema);
 export const Transaction = mongoose.models.Transaction || mongoose.model<ITransaction>("Transaction", transactionSchema);
 export const Review = mongoose.models.Review || mongoose.model<IReview>("Review", reviewSchema);
+export const Want = mongoose.models.Want || mongoose.model<IWant>("Want", wantSchema);
+

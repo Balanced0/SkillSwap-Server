@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { ListingDocument, ReviewDocument, SessionDocument, TransactionDocument, UserDocument } from "../models/index.js";
+import type { ListingDocument, ReviewDocument, SessionDocument, TransactionDocument, UserDocument, WantDocument } from "../models/index.js";
 
 function plain<T>(value: T): T {
   const candidate = value as T & { toObject?: () => T };
@@ -39,6 +39,23 @@ export function serializeTeacher(user: UserDocument) {
     sessionsCompleted: source.sessionsCompleted,
   };
 }
+
+export function serializePublicMember(user: UserDocument) {
+  const source = plain(user);
+  return {
+    _id: identifier(source),
+    name: source.name,
+    avatarUrl: source.avatarUrl,
+    bio: source.bio,
+    location: source.location,
+    averageRating: source.averageRating,
+    sessionsCompleted: source.sessionsCompleted,
+    skillsOffered: source.skillsOffered,
+    skillsWanted: source.skillsWanted,
+    createdAt: source.createdAt,
+  };
+}
+
 
 export function serializeListing(listing: ListingDocument) {
   const source = plain(listing);
@@ -103,3 +120,22 @@ export function serializeTransaction(transaction: TransactionDocument, runningBa
     runningBalance,
   };
 }
+
+export function serializeWant(want: WantDocument) {
+  const source = plain(want);
+  const user = source.userId as unknown as UserDocument;
+  return {
+    _id: identifier(source),
+    skillName: source.skillName,
+    category: source.category,
+    description: source.description,
+    createdAt: source.createdAt,
+    user: {
+      _id: identifier(user),
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      location: user.location,
+    },
+  };
+}
+

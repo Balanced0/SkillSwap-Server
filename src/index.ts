@@ -10,6 +10,7 @@ import { membersRouter } from "./routes/members.js";
 import { platformRouter } from "./routes/platform.js";
 import { reviewsRouter } from "./routes/reviews.js";
 import { sessionsRouter } from "./routes/sessions.js";
+import { wantsRouter } from "./routes/wants.js";
 
 export const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/members", membersRouter);
 app.use("/api/listings", listingsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/reviews", reviewsRouter);
+app.use("/api/wants", wantsRouter);
 app.use("/api", platformRouter);
 app.use((_request, response) => response.status(404).json({ message: "Route not found." }));
 app.use(errorHandler);
