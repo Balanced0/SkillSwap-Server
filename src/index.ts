@@ -41,7 +41,15 @@ async function start() {
   app.listen(env.port, () => console.info(`SkillSwap API listening on http://localhost:${env.port}`));
 }
 
-void start().catch((error: unknown) => {
-  console.error("Failed to start SkillSwap API", error);
-  process.exitCode = 1;
-});
+if (process.env.VERCEL !== "1") {
+  void start().catch((error: unknown) => {
+    console.error("Failed to start SkillSwap API", error);
+    process.exitCode = 1;
+  });
+} else {
+  void connectDatabase().catch((error: unknown) => {
+    console.error("Failed to connect to database on Vercel boot", error);
+  });
+}
+
+export default app;
