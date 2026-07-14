@@ -15,12 +15,6 @@ export const auth = betterAuth({
   baseURL: env.betterAuthUrl,
   secret: required("BETTER_AUTH_SECRET", env.betterAuthSecret),
   trustedOrigins: env.clientOrigins,
-  advanced: {
-    useSecureCookies: true,
-    cookie: {
-      sameSite: "none",
-    },
-  },
   emailAndPassword: {
     enabled: true,
   },
