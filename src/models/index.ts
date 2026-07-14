@@ -43,6 +43,7 @@ export type ISession = {
   proposedTime: Date;
   durationHours: number;
   status: SessionStatus;
+  proposedBy: "Teacher" | "Learner";
   teacherConfirmedComplete: boolean;
   learnerConfirmedComplete: boolean;
   createdAt: Date;
@@ -127,6 +128,7 @@ const sessionSchema = new Schema<ISession>({
   proposedTime: { type: Date, required: true },
   durationHours: { type: Number, default: 1, min: 1, max: 1 },
   status: { type: String, enum: SESSION_STATUSES, default: "Requested", index: true },
+  proposedBy: { type: String, enum: ["Teacher", "Learner"], default: "Learner" },
   teacherConfirmedComplete: { type: Boolean, default: false },
   learnerConfirmedComplete: { type: Boolean, default: false },
 }, { timestamps: true });

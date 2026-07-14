@@ -89,6 +89,7 @@ export function serializeSession(session: SessionDocument) {
     proposedTime: source.proposedTime,
     durationHours: source.durationHours,
     status: source.status,
+    proposedBy: source.proposedBy || "Learner",
     teacherConfirmedComplete: source.teacherConfirmedComplete,
     learnerConfirmedComplete: source.learnerConfirmedComplete,
     createdAt: source.createdAt,
