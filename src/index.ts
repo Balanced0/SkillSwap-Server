@@ -13,6 +13,7 @@ import { sessionsRouter } from "./routes/sessions.js";
 import { wantsRouter } from "./routes/wants.js";
 
 export const app = express();
+app.set("trust proxy", true);
 
 app.use(cors({
   origin(origin, callback) {
